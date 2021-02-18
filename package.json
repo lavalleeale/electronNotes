@@ -43,14 +43,9 @@
     "afterSign": ".erb/scripts/Notarize.js",
     "mac": {
       "target": [
-        {
-          "target": "dmg",
-          "arch": "x64"
-        },
-        {
-          "target": "pkg",
-          "arch": "x64"
-        }
+        "dmg",
+        "pkg",
+        "zip"
       ],
       "type": "distribution",
       "hardenedRuntime": true,
