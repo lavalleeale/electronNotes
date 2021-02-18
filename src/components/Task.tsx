@@ -18,14 +18,14 @@ const Note = ({
   note: Record<string, string>;
   updateNote: (arg0: string, arg1: string, arg2: string) => void;
 }) => {
-  const [title, setTitle] = useState(new Date(note.title));
+  const [title, setTitle] = useState<Date | null>(new Date(note.title));
   const [content, setContent] = useState(note.content);
+  const [showEditor, setShowEditor] = useState(false);
 
   function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    updateNote(note.id, title.toLocaleString(), content);
+    updateNote(note.id, title ? title.toLocaleString() : 'error', content);
   }
-  const [showEditor, setShowEditor] = useState(false);
   return (
     <Card style={{ marginTop: '10px', padding: '10px' }}>
       {showEditor ? (

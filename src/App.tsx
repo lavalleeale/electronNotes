@@ -42,7 +42,7 @@ const Index = () => {
   const [showCompose, setShowCompose] = useState(false);
   const [useDate, setUseDate] = useState(false);
   const [title, setTitle] = useState('');
-  const [date, setDate] = useState(new Date());
+  const [date, setDate] = useState<Date | null>(new Date());
   const [content, setContent] = useState('');
   const [notes, setNotes] = useState(store.get('notes'));
   unsubscribe();
