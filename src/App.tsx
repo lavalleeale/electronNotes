@@ -12,13 +12,14 @@ import {
 import DateFnsUtils from '@date-io/date-fns';
 import { Create } from '@material-ui/icons';
 import Store, { Schema } from 'electron-store';
-import { v4 as uuidv4 } from 'uuid';
 import {
   KeyboardDatePicker,
   MuiPickersUtilsProvider,
 } from '@material-ui/pickers';
 import Task from './components/Task';
 import Note from './components/Note';
+
+const { v4: uuidv4 } = require('uuid');
 
 const schema = {
   notes: {
