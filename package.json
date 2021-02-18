@@ -41,12 +41,11 @@
       "package.json"
     ],
     "afterSign": ".erb/scripts/Notarize.js",
-    "mac":
-      {
-        "target": {
-          "target":"dmg",
-          "arch":"arm64"
-        },
+    "mac": {
+      "target": {
+        "target": "dmg",
+        "arch": "arm64"
+      },
       "type": "distribution",
       "hardenedRuntime": true,
       "entitlements": "assets/entitlements.mac.plist",
@@ -255,6 +254,7 @@
     "@material-ui/core": "^4.11.3",
     "@material-ui/icons": "^4.11.2",
     "@material-ui/pickers": "^3.2.10",
+    "@types/uuid": "^8.3.0",
     "electron-debug": "^3.1.0",
     "electron-log": "^4.2.4",
     "electron-store": "^7.0.2",
