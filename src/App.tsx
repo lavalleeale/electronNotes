@@ -158,7 +158,7 @@ const Index = () => {
       <ul style={{ listStyleType: 'none', padding: '0px' }}>
         {(notes as Array<Record<string, string>>).map((note) => (
           <li key={note.id}>
-            {new Date(note.title) === new Date('x') ? (
+            {new Date(note.title).toString() === 'Invalid Date' ? (
               <Note
                 note={note}
                 deleteNote={deleteNote}
