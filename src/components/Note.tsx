@@ -35,6 +35,7 @@ const Note = ({
             id="Title"
           />
           <TextField
+            multiline
             required
             style={{ marginTop: '10px', width: '100%' }}
             value={content}
@@ -73,7 +74,9 @@ const Note = ({
             <Create />
           </IconButton>
           <h3>{note.title}</h3>
-          <p>{note.content}</p>
+          <pre style={{ whiteSpace: 'pre-wrap', fontSize: '16px' }}>
+            {note.content}
+          </pre>
         </>
       )}
     </Card>

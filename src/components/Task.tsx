@@ -47,6 +47,7 @@ const Note = ({
               }}
             />
             <TextField
+              multiline
               required
               style={{ marginTop: '10px', width: '100%' }}
               value={content}
@@ -86,7 +87,9 @@ const Note = ({
             <Create />
           </IconButton>
           <h3>{new Date(note.title).toLocaleDateString()}</h3>
-          <p>{note.content}</p>
+          <pre style={{ whiteSpace: 'pre-wrap', fontSize: '16px' }}>
+            {note.content}
+          </pre>
         </>
       )}
     </Card>

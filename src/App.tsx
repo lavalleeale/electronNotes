@@ -119,6 +119,7 @@ const Index = () => {
               />
             )}
             <TextField
+              multiline
               required
               style={{ marginTop: '10px', width: '100%' }}
               value={content}
