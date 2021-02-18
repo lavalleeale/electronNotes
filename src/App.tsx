@@ -1,11 +1,24 @@
 import React, { FormEvent, useState } from 'react';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 import './App.global.css';
-import { Card, IconButton, TextField, Button } from '@material-ui/core';
+import {
+  Card,
+  IconButton,
+  TextField,
+  Button,
+  FormControlLabel,
+  Switch,
+} from '@material-ui/core';
+import DateFnsUtils from '@date-io/date-fns';
 import { Create } from '@material-ui/icons';
 import Store, { Schema } from 'electron-store';
 import { v4 as uuidv4 } from 'uuid';
-import Note from './components/note';
+import {
+  KeyboardDatePicker,
+  MuiPickersUtilsProvider,
+} from '@material-ui/pickers';
+import Task from './components/Task';
+import Note from './components/Note';
 
 const schema = {
   notes: {
@@ -21,13 +34,19 @@ const schema = {
 } as Schema<unknown>;
 
 const store = new Store({ schema });
+let unsubscribe = store.onDidChange('notes', (newValue) =>
+  console.log(newValue)
+);
 
 const Index = () => {
   const [showCompose, setShowCompose] = useState(false);
+  const [useDate, setUseDate] = useState(false);
   const [title, setTitle] = useState('');
+  const [date, setDate] = useState(new Date());
   const [content, setContent] = useState('');
   const [notes, setNotes] = useState(store.get('notes'));
-  store.onDidChange('notes', (newValue) => setNotes(newValue));
+  unsubscribe();
+  unsubscribe = store.onDidChange('notes', (newValue) => setNotes(newValue));
   function deleteNote(id: string) {
     store.set(
       'notes',
@@ -40,7 +59,7 @@ const Index = () => {
     e.preventDefault();
     store.set('notes', [
       ...(store.get('notes') as Array<Record<string, string>>),
-      { title, content, id: uuidv4() },
+      { title: useDate ? date : title, content, id: uuidv4() },
     ]);
     setShowCompose(false);
     setTitle('');
@@ -69,15 +88,35 @@ const Index = () => {
       {showCompose && (
         <Card style={{ marginTop: '10px', padding: '10px' }}>
           <form onSubmit={onSubmit}>
-            <TextField
-              required
-              style={{ width: '100%' }}
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              label="Title"
-              variant="outlined"
-              id="Title"
-            />
+            {useDate ? (
+              <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                <KeyboardDatePicker
+                  variant="inline"
+                  required
+                  value={date}
+                  onChange={setDate}
+                  id="date-picker-inline"
+                  style={{ width: '100%' }}
+                  label="When"
+                  format="MM/dd/yyyy"
+                  name="title"
+                  minDate={new Date()}
+                  KeyboardButtonProps={{
+                    'aria-label': 'change date',
+                  }}
+                />
+              </MuiPickersUtilsProvider>
+            ) : (
+              <TextField
+                required
+                style={{ width: '100%' }}
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                label="Title"
+                variant="outlined"
+                id="Title"
+              />
+            )}
             <TextField
               required
               style={{ marginTop: '10px', width: '100%' }}
@@ -88,21 +127,49 @@ const Index = () => {
               id="Content"
             />
             <Button
-              aria-label={navigator.onLine ? 'Submit' : 'No Connection'}
-              disabled={!navigator.onLine}
+              aria-label="Submit"
               style={{ float: 'right', marginTop: '10px' }}
               variant="outlined"
               type="submit"
             >
               Submit
             </Button>
+            <FormControlLabel
+              style={{
+                float: 'right',
+                margin: 'auto',
+                display: 'flex',
+                justifyContent: 'center',
+              }}
+              label="Date"
+              labelPlacement="start"
+              control={
+                <Switch
+                  checked={useDate}
+                  onChange={(e) => setUseDate(e.target.checked)}
+                  name="checkedA"
+                />
+              }
+            />
           </form>
         </Card>
       )}
       <ul style={{ listStyleType: 'none', padding: '0px' }}>
         {(notes as Array<Record<string, string>>).map((note) => (
           <li key={note.id}>
-            <Note note={note} deleteNote={deleteNote} updateNote={updateNote} />
+            {new Date(note.title) === new Date('x') ? (
+              <Note
+                note={note}
+                deleteNote={deleteNote}
+                updateNote={updateNote}
+              />
+            ) : (
+              <Task
+                note={note}
+                deleteNote={deleteNote}
+                updateNote={updateNote}
+              />
+            )}
           </li>
         ))}
       </ul>
@@ -113,9 +180,7 @@ const Index = () => {
 export default function App() {
   return (
     <Router>
-      <Switch>
-        <Route path="/" component={Index} />
-      </Switch>
+      <Route path="/" component={Index} />
     </Router>
   );
 }
