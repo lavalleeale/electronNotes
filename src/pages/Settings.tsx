@@ -11,7 +11,7 @@ const schema = {
   },
 } as Schema<unknown>;
 
-const store = new Store({ schema });
+const store = new Store({ schema, name: 'settings' });
 
 store.clear();
 

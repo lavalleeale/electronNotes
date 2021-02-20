@@ -35,7 +35,7 @@ const schema = {
   },
 } as Schema<unknown>;
 
-const store = new Store({ schema });
+const store = new Store({ schema, name: 'notes' });
 let unsubscribe = store.onDidChange('notes', () => {});
 function sendNotification(taskName: string) {
   return new Notification('Task Due', {
