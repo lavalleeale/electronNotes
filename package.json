@@ -14,7 +14,7 @@
     "start:main": "cross-env NODE_ENV=development electron -r ./.erb/scripts/BabelRegister ./src/main.dev.ts",
     "start:renderer": "cross-env NODE_ENV=development webpack serve --config ./.erb/configs/webpack.config.renderer.dev.babel.js",
     "test": "jest",
-    "deploy": "GH_TOKEN=$(security find-generic-password -a lavalleeale -s GITHUB_KEY -w) sh -c 'yarn postinstall && yarn build && yarn electron-builder --publish always --mwl'"
+    "deploy": "GH_TOKEN=$(security find-generic-password -a lavalleeale -s GITHUB_KEY -w) sh -c 'yarn postinstall && yarn build && yarn electron-builder --publish always --mac --windows --linux'"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
