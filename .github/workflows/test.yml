@@ -18,6 +18,9 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 15
+      - name: Update Build Number
+        run: |
+          sed -i '' -e "s/GITHUB_CI_VERSION/1.0.0/g" src/package.json
 
       - name: yarn install
         run: |
