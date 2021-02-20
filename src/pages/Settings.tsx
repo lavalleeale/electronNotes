@@ -7,7 +7,7 @@ import '../App.global.css';
 const schema = {
   settings: {
     type: 'object',
-    default: { delay: 3600000 },
+    default: { delay: 3600000, notificationTime: 7200000 },
   },
 } as Schema<unknown>;
 
@@ -16,11 +16,16 @@ const store = new Store({ schema });
 store.clear();
 
 export default function Settings() {
-  const [delay, setDelay] = useState(`${store.get('settings.delay') / 60000}`);
+  const [notificationTime, setNotificationTime] = useState(
+    `${store.get('settings.notificationTime') / 3600000}`
+  );
   const [finished, setFinished] = useState(false);
 
   function onSubmit(e: FormEvent<HTMLFormElement>) {
-    store.set('settings.delay', `${parseInt(delay, 10) * 60000}`);
+    store.set(
+      'settings.notificationTime',
+      `${parseInt(notificationTime, 10) * 3600000}`
+    );
     e.preventDefault();
     setFinished(true);
   }
@@ -36,12 +41,12 @@ export default function Settings() {
           <TextField
             required
             type="number"
-            value={delay}
-            onChange={(e) => setDelay(e.target.value)}
-            style={{ width: '100%', appearance: 'textfield' }}
-            label="Check Interval (minutes)"
+            value={notificationTime}
+            onChange={(e) => setNotificationTime(e.target.value)}
+            style={{ width: '100%', marginTop: '10px' }}
+            label="Time Between Notifications (hours)"
             variant="outlined"
-            id="interval"
+            id="wait"
           />
           <Button
             type="submit"

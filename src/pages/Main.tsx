@@ -27,6 +27,7 @@ const schema = {
     default: [
       {
         id: '1',
+        lastNotificationTime: 0,
         title: 'Test',
         content: 'good',
       },
@@ -45,14 +46,28 @@ function checkDue() {
   store.get('notes').forEach((note: Record<string, string>) => {
     if (
       new Date(note.title).toString() !== 'Invalid Date' &&
-      new Date(note.title) < new Date()
+      new Date(note.title) < new Date() &&
+      new Date(
+        note.lastNotificationTime + store.get('settings.notificationTime')
+      ) < new Date()
     ) {
+      store.set('notes', [
+        ...(store.get('notes') as Array<Record<string, string>>).filter(
+          (checkNote) => checkNote.id !== note.id
+        ),
+        {
+          title: note.title,
+          content: note.content,
+          id: note.id,
+          lastNotificationTime: new Date().getTime(),
+        },
+      ]);
       sendNotification(note.content);
     }
   });
 }
 checkDue();
-let notificationTime = setInterval(checkDue, store.get('settings.delay'));
+setInterval(checkDue, 60000);
 
 export default function Main() {
   const [showCompose, setShowCompose] = useState(false);
@@ -61,8 +76,6 @@ export default function Main() {
   const [date, setDate] = useState<Date | null>(new Date());
   const [content, setContent] = useState('');
   const [notes, setNotes] = useState(store.get('notes'));
-  clearInterval(notificationTime);
-  notificationTime = setInterval(checkDue, store.get('settings.delay'));
 
   unsubscribe();
   unsubscribe = store.onDidChange('notes', (newValue) => setNotes(newValue));
@@ -78,18 +91,33 @@ export default function Main() {
     e.preventDefault();
     store.set('notes', [
       ...(store.get('notes') as Array<Record<string, string>>),
-      { title: useDate ? date : title, content, id: uuidv4() },
+      {
+        title: useDate ? date : title,
+        content,
+        id: uuidv4(),
+        lastNotificationTime: 0,
+      },
     ]);
     setShowCompose(false);
     setTitle('');
     setContent('');
   }
-  function updateNote(id: string, noteTitle: string, noteContent: string) {
+  function updateNote(
+    id: string,
+    noteTitle: string,
+    noteContent: string,
+    lastNotificationTime: string
+  ) {
     store.set('notes', [
       ...(store.get('notes') as Array<Record<string, string>>).filter(
         (note) => note.id !== id
       ),
-      { title: noteTitle, content: noteContent, id: uuidv4() },
+      {
+        title: noteTitle,
+        content: noteContent,
+        id: uuidv4(),
+        lastNotificationTime: parseInt(lastNotificationTime, 10),
+      },
     ]);
   }
 

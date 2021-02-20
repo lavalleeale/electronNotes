@@ -16,7 +16,7 @@ const Note = ({
 }: {
   deleteNote: (arg0: string) => void;
   note: Record<string, string>;
-  updateNote: (arg0: string, arg1: string, arg2: string) => void;
+  updateNote: (arg0: string, arg1: string, arg2: string, arg3: string) => void;
 }) => {
   const [title, setTitle] = useState<Date | null>(new Date(note.title));
   const [content, setContent] = useState(note.content);
@@ -24,7 +24,12 @@ const Note = ({
 
   function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    updateNote(note.id, title ? title.toLocaleString() : 'error', content);
+    updateNote(
+      note.id,
+      title ? title.toLocaleString() : 'error',
+      content,
+      note.lastNotificationTime
+    );
   }
   return (
     <Card style={{ marginTop: '10px', padding: '10px' }}>
@@ -102,6 +107,7 @@ Note.propTypes = {
     title: PropTypes.string,
     id: PropTypes.string,
     content: PropTypes.string,
+    lastNotificationTime: PropTypes.number,
   }).isRequired,
   updateNote: PropTypes.func.isRequired,
 };

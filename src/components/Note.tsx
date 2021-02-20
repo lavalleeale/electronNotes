@@ -11,14 +11,14 @@ const Note = ({
 }: {
   deleteNote: (arg0: string) => void;
   note: Record<string, string>;
-  updateNote: (arg0: string, arg1: string, arg2: string) => void;
+  updateNote: (arg0: string, arg1: string, arg2: string, arg4: string) => void;
 }) => {
   const [title, setTitle] = useState(note.title);
   const [content, setContent] = useState(note.content);
 
   function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    updateNote(note.id, title, content);
+    updateNote(note.id, title, content, note.lastNotificationTime);
   }
   const [showEditor, setShowEditor] = useState(false);
   return (
@@ -89,6 +89,7 @@ Note.propTypes = {
     title: PropTypes.string,
     id: PropTypes.string,
     content: PropTypes.string,
+    lastNotificationTime: PropTypes.number,
   }).isRequired,
   updateNote: PropTypes.func.isRequired,
 };
