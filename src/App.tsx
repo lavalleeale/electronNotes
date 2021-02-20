@@ -35,9 +35,24 @@ const schema = {
 } as Schema<unknown>;
 
 const store = new Store({ schema });
-let unsubscribe = store.onDidChange('notes', (newValue) =>
-  console.log(newValue)
-);
+let unsubscribe = store.onDidChange('notes', () => {});
+function sendNotification(taskName: string) {
+  return new Notification('Task Due', {
+    body: `Task ${taskName} is now due`,
+  });
+}
+function checkDue() {
+  store.get('notes').forEach((note: Record<string, string>) => {
+    if (
+      new Date(note.title).toString() !== 'Invalid Date' &&
+      new Date(note.title) < new Date()
+    ) {
+      sendNotification(note.content);
+    }
+  });
+}
+checkDue();
+setInterval(checkDue, 3600000);
 
 const Index = () => {
   const [showCompose, setShowCompose] = useState(false);
@@ -46,6 +61,7 @@ const Index = () => {
   const [date, setDate] = useState<Date | null>(new Date());
   const [content, setContent] = useState('');
   const [notes, setNotes] = useState(store.get('notes'));
+
   unsubscribe();
   unsubscribe = store.onDidChange('notes', (newValue) => setNotes(newValue));
   function deleteNote(id: string) {
