@@ -18,14 +18,12 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 15
-      - name: Update Build Number
-        run: |
-          if [ "$RUNNER_OS" == "macOS" ]; then
-              sed -i '' -e "s/GITHUB_CI_VERSION/1.0.0/g" src/package.json
-          else
-            sed -i -e "s/GITHUB_CI_VERSION/1.0.0/g" src/package.json
-          fi
-
+      - name: Update Build Number (Mac)
+        if: runner.os == 'macOS'
+        run: sed -i '' -e "s/GITHUB_CI_VERSION/1.0.0/g" src/package.json
+      - name: Update Build Number (Linux & Windows)
+        if: runner.os != 'macOS'
+        run: sed -i -e "s/GITHUB_CI_VERSION/1.0.0/g" src/package.json
       - name: yarn install
         run: |
           yarn install --frozen-lockfile --network-timeout 300000
