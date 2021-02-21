@@ -6,7 +6,8 @@ import {
   TextField,
   Button,
   FormControlLabel,
-  Switch,
+  Radio,
+  RadioGroup,
 } from '@material-ui/core';
 import DateFnsUtils from '@date-io/date-fns';
 import { Add, Settings } from '@material-ui/icons';
@@ -68,7 +69,7 @@ setInterval(checkDue, 60000);
 
 export default function Main() {
   const [showCompose, setShowCompose] = useState(false);
-  const [useDate, setUseDate] = useState(false);
+  const [inputType, setInputType] = useState('note');
   const [title, setTitle] = useState('');
   const [date, setDate] = useState<Date | null>(new Date());
   const [content, setContent] = useState('');
@@ -89,7 +90,7 @@ export default function Main() {
     store.set('notes', [
       ...(store.get('notes') as Array<Record<string, string>>),
       {
-        title: useDate ? date : title,
+        title: inputType === 'task' ? date : title,
         content,
         id: uuidv4(),
         lastNotificationTime: 0,
@@ -137,9 +138,10 @@ export default function Main() {
       {showCompose && (
         <Card style={{ marginTop: '10px', padding: '10px' }}>
           <form onSubmit={onSubmit}>
-            {useDate ? (
+            {inputType === 'task' ? (
               <MuiPickersUtilsProvider utils={DateFnsUtils}>
                 <DateTimePicker
+                  inputVariant="outlined"
                   required
                   value={date}
                   onChange={setDate}
@@ -178,23 +180,16 @@ export default function Main() {
             >
               Submit
             </Button>
-            <FormControlLabel
-              style={{
-                float: 'right',
-                margin: 'auto',
-                display: 'flex',
-                justifyContent: 'center',
-              }}
-              label="Date"
-              labelPlacement="start"
-              control={
-                <Switch
-                  checked={useDate}
-                  onChange={(e) => setUseDate(e.target.checked)}
-                  name="checkedA"
-                />
-              }
-            />
+            <RadioGroup
+              value={inputType}
+              onChange={(e) => setInputType(e.target.value)}
+              style={{ float: 'right', marginTop: '5px' }}
+              row
+              aria-label="Type"
+            >
+              <FormControlLabel value="task" control={<Radio />} label="Task" />
+              <FormControlLabel value="note" control={<Radio />} label="Note" />
+            </RadioGroup>
           </form>
         </Card>
       )}
