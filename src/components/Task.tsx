@@ -3,10 +3,7 @@ import '../App.global.css';
 import { Card, IconButton, TextField, Button } from '@material-ui/core';
 import { Create, Delete, CancelScheduleSend } from '@material-ui/icons';
 import PropTypes from 'prop-types';
-import {
-  KeyboardDatePicker,
-  MuiPickersUtilsProvider,
-} from '@material-ui/pickers';
+import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 
 const Note = ({
@@ -36,20 +33,14 @@ const Note = ({
       {showEditor ? (
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
           <form onSubmit={onSubmit}>
-            <KeyboardDatePicker
-              variant="inline"
+            <DateTimePicker
               required
               value={title}
               onChange={setTitle}
-              id="date-picker-inline"
               style={{ width: '100%' }}
               label="When"
-              format="MM/dd/yyyy"
               name="title"
               minDate={new Date()}
-              KeyboardButtonProps={{
-                'aria-label': 'change date',
-              }}
             />
             <TextField
               multiline

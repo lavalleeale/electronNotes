@@ -11,10 +11,7 @@ import {
 import DateFnsUtils from '@date-io/date-fns';
 import { Add, Settings } from '@material-ui/icons';
 import Store, { Schema } from 'electron-store';
-import {
-  KeyboardDatePicker,
-  MuiPickersUtilsProvider,
-} from '@material-ui/pickers';
+import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import { Link } from 'react-router-dom';
 import Task from '../components/Task';
 import Note from '../components/Note';
@@ -142,20 +139,14 @@ export default function Main() {
           <form onSubmit={onSubmit}>
             {useDate ? (
               <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                <KeyboardDatePicker
-                  variant="inline"
+                <DateTimePicker
                   required
                   value={date}
                   onChange={setDate}
-                  id="date-picker-inline"
                   style={{ width: '100%' }}
                   label="When"
-                  format="MM/dd/yyyy"
                   name="title"
                   minDate={new Date()}
-                  KeyboardButtonProps={{
-                    'aria-label': 'change date',
-                  }}
                 />
               </MuiPickersUtilsProvider>
             ) : (
