@@ -83,9 +83,9 @@ const Note = ({
           >
             <Create />
           </IconButton>
-          <h3>{new Date(note.title).toLocaleDateString()}</h3>
+          <h3>{dateio.format(new Date(note.title), "MMMM dd'th' p")}</h3>
           <pre style={{ whiteSpace: 'pre-wrap', fontSize: '16px' }}>
-            {dateio.format(new Date(note.content), "MMMM dd'th' p")}
+            {note.content}
           </pre>
         </>
       )}

@@ -16,6 +16,18 @@ jobs:
     steps:
       - name: Checkout git repo
         uses: actions/checkout@v1
+      - name: Install Node, NPM and Yarn
+        uses: actions/setup-node@v1
+        with:
+          node-version: 15
+      - name: Yarn Cache
+        uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+      - name: Install dependencies
+        run: |
+          yarn install
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -33,15 +45,6 @@ jobs:
         run: |
           export CLEAN_TAG=$(echo $TAG_NAME | sed -e 's/refs\/tags\/v//')
           sed -i '' -e "s/GITHUB_CI_VERSION/$CLEAN_TAG/g" src/package.json
-      - name: Install Node, NPM and Yarn
-        uses: actions/setup-node@v1
-        with:
-          node-version: 15
-
-      - name: Install dependencies
-        run: |
-          yarn install
-
       - name: Publish releases
         env:
           # These values are used for auto updates signing
