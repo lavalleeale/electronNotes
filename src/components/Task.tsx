@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 
+const dateio = new DateFnsUtils();
 const Note = ({
   deleteNote,
   note,
@@ -84,7 +85,7 @@ const Note = ({
           </IconButton>
           <h3>{new Date(note.title).toLocaleDateString()}</h3>
           <pre style={{ whiteSpace: 'pre-wrap', fontSize: '16px' }}>
-            {note.content}
+            {dateio.format(new Date(note.content), "MMMM dd'th' p")}
           </pre>
         </>
       )}
