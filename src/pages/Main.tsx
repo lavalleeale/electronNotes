@@ -34,6 +34,7 @@ const schema = {
 } as Schema<unknown>;
 
 const store = new Store({ schema, name: 'notes' });
+const settings = new Store({ name: 'settings' });
 let unsubscribe = store.onDidChange('notes', () => {});
 function sendNotification(taskName: string) {
   return new Notification('Task Due', {
@@ -46,7 +47,7 @@ function checkDue() {
       new Date(note.title).toString() !== 'Invalid Date' &&
       new Date(note.title) < new Date() &&
       new Date(
-        note.lastNotificationTime + store.get('settings.notificationTime')
+        note.lastNotificationTime + settings.get('settings.notificationTime')
       ) < new Date()
     ) {
       store.set('notes', [
